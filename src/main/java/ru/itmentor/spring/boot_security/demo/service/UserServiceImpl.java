@@ -90,7 +90,6 @@ public class UserServiceImpl implements UserService {
         Optional<List<Role>> roles = Optional.ofNullable(userDao.getRoleByUsername(username));
         return roles.orElseThrow(UserNotFoundException::new);
     }
-
 }
 
 
