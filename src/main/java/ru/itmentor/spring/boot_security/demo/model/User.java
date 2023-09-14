@@ -1,29 +1,28 @@
 package ru.itmentor.spring.boot_security.demo.model;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Set;
 
 @Entity
 @Table(name = "users")
-@Getter @Setter @NoArgsConstructor @ToString
+
 public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "username")
+    @Column
     private String username;
 
-    @Column(name = "password")
+    @Column
     private String password;
 
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
@@ -32,42 +31,43 @@ public class User implements UserDetails {
     private Set<Role> roles;
 
     @Column
-    private String name;
-
-    @Column
-    private String surname;
+    private String fullName;
 
     @Column
     private int age;
 
     @Column
-    private String sex;
+    @Email
+    private String email;
 
     @Column
-    private String location;
+    private LocalDateTime created_at;
 
     @Column
-    private short salary;
+    private LocalDateTime updated_at;
 
-    @Column
-    private float height;
+    public User() {
+    }
 
     public User(String username, String password) {
         this.username = username;
         this.password = password;
     }
 
-    public User(String name, String surname, int age, String sex, String location, short salary, float height) {
-        this.name = name;
-        this.surname = surname;
+    public User(Long id, String username, String password, Set<Role> roles,
+                String fullName, int age, String email, LocalDateTime created_at) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.roles = roles;
+        this.fullName = fullName;
         this.age = age;
-        this.sex = sex;
-        this.location = location;
-        this.salary = salary;
-        this.height = height;
+        this.email = email;
+        this.created_at = created_at;
     }
 
     @Override
+    @JsonIgnore
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return roles;
     }
@@ -83,22 +83,106 @@ public class User implements UserDetails {
     }
 
     @Override
+    @JsonIgnore
     public boolean isAccountNonExpired() {
         return true;
     }
 
     @Override
+    @JsonIgnore
     public boolean isAccountNonLocked() {
         return true;
     }
 
     @Override
+    @JsonIgnore
     public boolean isCredentialsNonExpired() {
         return true;
     }
 
     @Override
+    @JsonIgnore
     public boolean isEnabled() {
         return true;
     }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public LocalDateTime getCreated_at() {
+        return created_at;
+    }
+
+    public void setCreated_at(LocalDateTime created_at) {
+        this.created_at = created_at;
+    }
+
+    public LocalDateTime getUpdated_at() {
+        return updated_at;
+    }
+
+    public void setUpdated_at(LocalDateTime updated_at) {
+        this.updated_at = updated_at;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+               "id=" + id +
+               ", username='" + username + '\'' +
+               ", password='" + password + '\'' +
+               ", roles=" + roles +
+               ", fullName='" + fullName + '\'' +
+               ", age=" + age +
+               ", email='" + email + '\'' +
+               ", created_at=" + created_at +
+               ", updated_at=" + updated_at +
+               '}';
+    }
 }
+
